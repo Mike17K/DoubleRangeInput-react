@@ -10,7 +10,7 @@ export const DoubleScrollBar = (props) => {
     useEffect(() => {
         const display = document.getElementById(props.forid);
         const slider = document.getElementById(`slider-${props.forid}`);
-        
+        console.log({inputFrom,inputTo});
         if (inputFrom>inputTo){
             display.innerHTML = `${inputTo}-${inputFrom}`;
             slider.style.right = `${100-(inputFrom-props.min)/(props.max-props.min)*100}%`;
@@ -21,24 +21,23 @@ export const DoubleScrollBar = (props) => {
             slider.style.left = `${(inputFrom-props.min)/(props.max-props.min)*100}%`;
         }
         
-
     }, [inputFrom,inputTo,props])
     
 
   return (
-    <div>
+    <div class={`${props.class}`}>
         <div class="range-slider">
             <span class="range-selected" id={`slider-${props.forid}`}></span>
         </div>
         <div class="range-input">
             <input type="range" 
-            onChange={(e)=>setInputFrom(e.target.value)}
+            onChange={(e)=>setInputFrom(parseFloat(e.target.value))}
             min={props.min}
             max={props.max}
             step={props.step}
             defaultValue={props.min}/>
             <input type="range"
-            onChange={(e)=>setInputTo(e.target.value)}
+            onChange={(e)=>setInputTo(parseFloat(e.target.value))}
             min={props.min}
             max={props.max}
             step={props.step}
