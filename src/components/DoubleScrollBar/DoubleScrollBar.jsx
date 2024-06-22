@@ -1,47 +1,46 @@
-import React, { useState ,useEffect} from 'react'
+import React, { useState ,useEffect, useRef} from 'react'
 import './DoubleScrollBar.css';
 
-
-
-export const DoubleScrollBar = (props) => {
-    const [inputFrom,setInputFrom ] = useState(props.min);
-    const [inputTo,setInputTo ] = useState(props.max);
+export const DoubleScrollBar = ({min,max,step,className,onChange}) => {
+    const [inputFrom,setInputFrom ] = useState(min);
+    const [inputTo,setInputTo ] = useState(max);
+    const sliderRef = useRef(null);
 
     useEffect(() => {
-        const display = document.getElementById(props.forid);
-        const slider = document.getElementById(`slider-${props.forid}`);
-        console.log({inputFrom,inputTo});
+        if (sliderRef.current===null) return;
         if (inputFrom>inputTo){
-            display.innerHTML = `${inputTo}-${inputFrom}`;
-            slider.style.right = `${100-(inputFrom-props.min)/(props.max-props.min)*100}%`;
-            slider.style.left = `${(inputTo-props.min)/(props.max-props.min)*100}%`;
+            sliderRef.current.style.right = `${100-(inputFrom-min)/(max-min)*100}%`;
+            sliderRef.current.style.left = `${(inputTo-min)/(max-min)*100}%`;
         }else{
-            display.innerHTML = `${inputFrom}-${inputTo}`;
-            slider.style.right = `${100-(inputTo-props.min)/(props.max-props.min)*100}%`;
-            slider.style.left = `${(inputFrom-props.min)/(props.max-props.min)*100}%`;
+            sliderRef.current.style.right = `${100-(inputTo-min)/(max-min)*100}%`;
+            sliderRef.current.style.left = `${(inputFrom-min)/(max-min)*100}%`;
+        }
+
+        if (onChange){
+            onChange(inputFrom,inputTo);
         }
         
-    }, [inputFrom,inputTo,props])
+    }, [inputFrom,inputTo])
     
 
   return (
-    <div class={`${props.class}`}>
-        <div class="range-slider">
-            <span class="range-selected" id={`slider-${props.forid}`}></span>
+    <div className={`${className}`}>
+        <div className="range-slider">
+            <span className="range-selected" ref={sliderRef}></span>
         </div>
-        <div class="range-input">
+        <div className="range-input">
             <input type="range" 
             onChange={(e)=>setInputFrom(parseFloat(e.target.value))}
-            min={props.min}
-            max={props.max}
-            step={props.step}
-            defaultValue={props.min}/>
+            min={min}
+            max={max}
+            step={step}
+            defaultValue={min}/>
             <input type="range"
             onChange={(e)=>setInputTo(parseFloat(e.target.value))}
-            min={props.min}
-            max={props.max}
-            step={props.step}
-             defaultValue={props.max}/>
+            min={min}
+            max={max}
+            step={step}
+             defaultValue={max}/>
         </div>
     </div>
   )
